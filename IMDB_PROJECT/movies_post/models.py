@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth import get_user_model
+
 from . import enums
 
 
@@ -15,9 +17,7 @@ class Movie(models.Model):
                     for tag in enums.LanguageChoice]
     )
 
-    rating = models.FloatField(
-        validators=[MaxValueValidator(10), MinValueValidator(0)]
-    )
+    date_posted = models.DateTimeField(auto_now_add=True)
 
     story_line = models.TextField(
         max_length=500
@@ -43,6 +43,32 @@ class Movie(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    
+    def get_avg_rating(self):
+        return self.review_set.aggregate(
+            models.Avg("rating")
+        ).get("rating__avg", 0)
+
+
+class Review(models.Model):
+    commenter = models.ForeignKey(
+        to=get_user_model(), 
+        on_delete=models.CASCADE)
+
+    reviewed_movie = models.ForeignKey(
+        to=Movie, 
+        on_delete=models.CASCADE)
+
+    content = models.TextField(
+        max_length=250)
+
+    rating = models.FloatField(
+        default=0.0, validators=[
+                        MinValueValidator(0.0),
+                        MaxValueValidator(10.0)])
+    
+    def __str__(self) -> str:
+        return str(self.commenter)
 
 
 class Person(models.Model):
@@ -59,7 +85,7 @@ class Person(models.Model):
 
 
 class MovieCast(models.Model):
-    # It is out junction model
+    # It is our junction model
     # Model contains records of each person in a movie as a actors member
 
     #each person has relation with many movies
@@ -87,6 +113,8 @@ class MovieCast(models.Model):
 
 
 class MovieCrew(models.Model):
+    # It is our junction model
+    # Model contains records of each person in a movie as a crew member like director, photogragher, writer, etc
 
     person_name = models.ForeignKey(
         to=Person,
