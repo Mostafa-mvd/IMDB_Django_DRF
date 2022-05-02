@@ -1,13 +1,17 @@
 
 version: '3.9'
 
+
+volumes:
+  IMDB_DATABASE_VOLUME:
+
 services:
   postgre_imdb:
     image: 'postgres:latest'
     ports:
       - 5432:5432
     volumes:
-      - ./db-data/:/var/lib/postgresql/data/
+      - IMDB_DATABASE_VOLUME:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: mostafa_8888
       POSTGRES_PASSWORD: 12345mostafa12345
