@@ -8,6 +8,7 @@ admin.site.register(
         models.MovieCrew,
         models.MovieCast,
         models.Movie,
+        models.Review,
     ]
 )
 
