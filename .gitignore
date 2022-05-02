@@ -153,8 +153,7 @@ dmypy.json
 cython_debug/
 
 
-#docker files
-db-data
+static
 
 #vs code files
 .vscode/*
