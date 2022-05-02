@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "database": "imdb_database",
+            "password": "12345mostafa12345",
+            "username": "mostafa_8888",
+            "name": "postgre_imdb"
+        }
+    ]
+}
