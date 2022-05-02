@@ -153,7 +153,7 @@ dmypy.json
 cython_debug/
 
 
-static
+static/
 
 #vs code files
-.vscode/*
+.vscode/
