@@ -4,6 +4,6 @@ from . import serializers
 
 
 class MovieListView(ListAPIView):
-    serializer_class = serializers.MoviesSerializer
+    serializer_class = serializers.MoviesListSerializer
     queryset = models.Movie.objects.all()
     model = models.Movie
