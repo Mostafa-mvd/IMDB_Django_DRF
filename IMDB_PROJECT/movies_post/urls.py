@@ -7,7 +7,9 @@ from . import views
 app_name = "movies"
 
 
-urlpatterns = []
+urlpatterns = [
+    path('list/', views.MovieListView.as_view(), name='movies_list'),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
