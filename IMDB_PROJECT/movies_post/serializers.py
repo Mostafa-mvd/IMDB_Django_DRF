@@ -1,3 +1,4 @@
+from dataclasses import field
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
@@ -5,6 +6,14 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from . import models
 
+
+class CreateMoviePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Movie
+        fields = ('title', 'lang',
+                  'story_line', 'genre',
+                  'released_date', 'poster',
+                  'duration_hour', 'duration_min')
 
 class MoviesListSerializer(serializers.HyperlinkedModelSerializer):
     detail = serializers.HyperlinkedIdentityField(

@@ -10,6 +10,12 @@ from . import models
 from . import serializers
 
 
+class CreateMoviePostView(CreateAPIView):
+    model = models.Movie
+    serializer_class = serializers.CreateMoviePostSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+
 class MoviesListView(ListAPIView):
     serializer_class = serializers.MoviesListSerializer
     queryset = models.Movie.objects.all()
