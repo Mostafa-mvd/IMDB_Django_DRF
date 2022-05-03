@@ -1,4 +1,7 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+
+
 from rest_framework import serializers
 from . import models
 
@@ -13,8 +16,11 @@ class MoviesListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class MovieDetailSerializer(serializers.HyperlinkedModelSerializer):
-    review = serializers.HyperlinkedIdentityField(
-        view_name='movies_ns:movie_review', format='html')
+    show_reviews = serializers.HyperlinkedIdentityField(
+        view_name='movies_ns:showing_movie_review', format='html')
+
+    send_review = serializers.HyperlinkedIdentityField(
+        view_name='movies_ns:sending_movie_review', format='html')
     
     def to_representation(self, instance):
         result = super().to_representation(instance)
@@ -35,15 +41,15 @@ class MovieDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Movie
         fields = (
-            'review', 'title',
-            'lang', 'date_posted',
+            'show_reviews', 'send_review', 
+            'title', 'lang', 'date_posted',
             'story_line', 'genre',
             'released_date', 'poster',
             'duration_hour', 'duration_min',
         )
         
 
-class MovieReviewSerializer(serializers.ModelSerializer):
+class SendReviewSerializer(serializers.ModelSerializer):
     commenter = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
@@ -61,3 +67,24 @@ class MovieReviewSerializer(serializers.ModelSerializer):
         fields = ('commenter', 
                   'content', 
                   'rating')
+
+
+class ListReviewsSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+
+        commenter_pk = result['commenter']
+        user_model = get_user_model()
+        commenter_obj = user_model.objects.get(pk=commenter_pk)
+
+        result["commenter"] = commenter_obj.username
+
+        return result
+
+    class Meta:
+        model = models.Review
+        fields = (
+            'rating',
+            'content',
+            'commenter',
+        )

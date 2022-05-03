@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+
 from rest_framework.generics import (ListAPIView, 
                                      CreateAPIView, 
                                      RetrieveAPIView)
@@ -21,9 +22,9 @@ class MovieDetailView(RetrieveAPIView):
     model = models.Movie
 
 
-class MovieReviewView(CreateAPIView):
+class CreateMovieReviewView(CreateAPIView):
     model = models.Review
-    serializer_class = serializers.MovieReviewSerializer
+    serializer_class = serializers.SendReviewSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
     def create(self, request, *args, **kwargs):
@@ -38,3 +39,15 @@ class MovieReviewView(CreateAPIView):
         serializer_context = super().get_serializer_context()
         serializer_context['pk'] = self.kwargs.get("pk", None)
         return serializer_context
+
+
+class MovieReviewsListView(ListAPIView):
+    serializer_class = serializers.ListReviewsSerializer
+    queryset = models.Review.objects.all()
+    model = models.Review
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        pk = self.kwargs.get("pk")
+        qs = qs.filter(reviewed_movie__id=pk)
+        return qs
