@@ -16,3 +16,10 @@ services:
       POSTGRES_USER: mostafa_8888
       POSTGRES_PASSWORD: 12345mostafa12345
       POSTGRES_DB: imdb_database
+
+  redis_broker:
+        hostname: imdb_redis_broker
+        image: "redis:latest"
+        ports: 
+            - 6380:6380
+            - 6379:6379
