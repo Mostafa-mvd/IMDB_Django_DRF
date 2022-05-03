@@ -63,12 +63,17 @@ class Review(models.Model):
         max_length=250)
 
     rating = models.FloatField(
-        default=0.0, validators=[
-                        MinValueValidator(0.0),
-                        MaxValueValidator(10.0)])
+        validators=[
+            MinValueValidator(0.0),
+            MaxValueValidator(10.0)])
     
     def __str__(self) -> str:
         return str(self.commenter)
+    
+    class Meta:
+        unique_together = (
+            'commenter', 'reviewed_movie'
+        )
 
 
 class Person(models.Model):
